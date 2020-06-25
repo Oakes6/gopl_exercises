@@ -15,7 +15,8 @@ func LimitReader(r io.Reader, n int64) io.Reader {
 }
 
 func (lr LimitReaderT) Read(p []byte) (int, error) {
-	num, e := lr.r.Read(p)
+	limitedSizeSlice := make([]byte, lr.n, lr.n)
+	num, e := lr.r.Read(limitedSizeSlice)
 	if e != nil {
 		return num, e
 	}
