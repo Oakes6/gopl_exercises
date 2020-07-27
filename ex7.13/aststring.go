@@ -2,6 +2,7 @@ package eval
 
 import (
 	"fmt"
+	"strings"
 )
 
 func (v Var) String() string {
@@ -9,20 +10,27 @@ func (v Var) String() string {
 }
 
 func (lit literal) String() string {
-	return fmt.Sprintf("%.6f", lit)
+	return fmt.Sprintf("%g", lit)
 }
 
 func (uni unary) String() string {
-	return fmt.Sprintf("%s%s", uni.op, uni.x.String())
+	return fmt.Sprintf("%c%s", uni.op, uni.x.String())
 }
 
 func (bin binary) String() string {
-	return fmt.Sprintf("%s %s %s", bin.x.String(), bin.op, bin.y.String())
+	return fmt.Sprintf("(%s %c %s)", bin.x.String(), bin.op, bin.y.String())
 }
 
 func (c call) String() string {
-	if c.fn == "pow" {
-		return fmt.Sprintf("%s(%s,%s)", c.fn, c.args[0], c.args[1])
+	strBuilder := &strings.Builder{}
+	strBuilder.WriteString(c.fn)
+	strBuilder.WriteString("(")
+	for i, v := range c.args {
+		if i != 0 {
+			strBuilder.WriteString(", ")
+		}
+		strBuilder.WriteString(v.String())
 	}
-	return fmt.Sprintf("%s(%s)", c.fn, c.args[0])
+	strBuilder.WriteString(")")
+	return strBuilder.String()
 }
