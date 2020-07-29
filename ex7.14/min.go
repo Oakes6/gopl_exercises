@@ -4,7 +4,7 @@ import (
 	"math"
 )
 
-// retrieves the minimum value of the set of this expressions operands
+// Min() retrieves the minimum value of the set of this expressions operands
 func (opExpr OpExpr) Min() literal {
 	currentMin := opExpr.min(literal(math.MaxFloat64))
 
@@ -14,15 +14,16 @@ func (opExpr OpExpr) Min() literal {
 func (opExpr OpExpr) min(currentMin literal) literal {
 	// check for each type
 
-	if v, ok := opExpr.expr.(literal); ok {
+	switch v := opExpr.expr.(type) {
+	case literal:
 		if v <= currentMin {
 			currentMin = v
 		}
 		return currentMin
-	} else if v, ok := opExpr.expr.(unary); ok {
+	case unary:
 		opExpr = OpExpr{v.x}
 		return opExpr.min(currentMin)
-	} else if v, ok := opExpr.expr.(binary); ok {
+	case binary:
 		opExprX := OpExpr{v.x}
 		opExprY := OpExpr{v.y}
 		minX := opExprX.min(currentMin)
@@ -31,16 +32,20 @@ func (opExpr OpExpr) min(currentMin literal) literal {
 			return minX
 		}
 		return minY
-	} else { // Var type
+	case call:
+		// loop through args creating objects and return the min of this set
+		minOfSet := currentMin
+		for _, val := range v.args {
+			current := OpExpr{val}
+			min := current.min(currentMin)
+			if min <= minOfSet {
+				minOfSet = min
+			}
+		}
+		return minOfSet
+	default:
 		return currentMin
+
 	}
-	// else if v, ok := opExpr.expr.(call); ok {
-	// 	buffer := make(int[], len(v.args))
-	// 	for i, v := range v.args {
-	// 		opExpr = OpExpr{v.args[i]}
-	// 		opExpr.min()
-	// 	}
-	// 	return opExpr.min(currentMin)
-	// }
 
 }
