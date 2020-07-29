@@ -6,7 +6,7 @@ import (
 
 func TestOpExpr(t *testing.T) {
 
-	// create tree
+	// create tree for 4 + 5 (SETUP)
 	x := literal(4)
 	y := literal(5)
 	binExpr := binary{op: '+', x: x, y: y}
@@ -15,12 +15,13 @@ func TestOpExpr(t *testing.T) {
 	opexpr := OpExpr{binExpr}
 	got := opexpr.Min()
 
+	// assert
 	if got != literal(4) {
 		t.Error("Unexpected result: " + got.String())
 		t.Fail()
 	}
 
-	// create tree for 'pow(x,3) + pow(y,2)'
+	// create tree for 'pow(x,3) + pow(y,2)' (SETUP)
 	varX := Var("x")
 	x = literal(2)
 	fn := "pow"
@@ -44,4 +45,13 @@ func TestOpExpr(t *testing.T) {
 		t.Fail()
 	}
 
+	// create tree for '6' (SETUP)
+	x = literal(6)
+	opexpr = OpExpr{x}
+
+	got = opexpr.Min()
+	if got != literal(6) {
+		t.Error("Unexpected result: " + got.String())
+		t.Fail()
+	}
 }
