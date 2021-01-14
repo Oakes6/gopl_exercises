@@ -5,11 +5,15 @@ import (
 	"log"
 	"net"
 	"os"
+	"time"
 )
 
 func main() {
-	for _, v := range os.Args {
+	for _, v := range os.Args[1:] {
 		go connect(v)
+	}
+	for {
+		time.Sleep(time.Minute)
 	}
 }
 
