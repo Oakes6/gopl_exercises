@@ -2,6 +2,7 @@ package counter
 
 import (
 	"bufio"
+	"strings"
 )
 
 // counter for lines
@@ -41,4 +42,22 @@ func (wc *WordCounter) Write(p []byte) (int, error) {
 		p = p[adv:]
 		itr++
 	}
+}
+
+type WordCounterr struct {
+	Count int
+}
+
+func (wc *WordCounterr) Write(p []byte) (int, error) {
+	numOfWords := 0
+	scanner := bufio.NewScanner(strings.NewReader(string(p)))
+	scanner.Split(bufio.ScanWords)
+
+	for scanner.Scan() {
+		numOfWords += 1
+
+	}
+
+	wc.Count += numOfWords
+	return len(p), nil
 }

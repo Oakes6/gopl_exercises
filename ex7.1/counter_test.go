@@ -31,3 +31,17 @@ func TestWordCounter(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestWordCounterr(t *testing.T) {
+	wc := &WordCounterr{}
+	p := []byte("Hello\nDebra\nI'm\nCounting\nLines\nlove happiness peace")
+	_, e := wc.Write(p)
+	if e != nil {
+		t.Log("error: ", e)
+		t.Fail()
+	}
+	if wc.Count != 8 {
+		t.Log("UNEXPECTED RESULT: ", wc.Count)
+		t.Fail()
+	}
+}

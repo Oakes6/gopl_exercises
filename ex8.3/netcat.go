@@ -30,7 +30,7 @@ func main() {
 		done <- struct{}{} // signal the main goroutine
 	}()
 	mustCopy(conn, os.Stdin)
-	conn.Close()
+	conn.CloseWrite()
 	<-done // wait for background goroutine to finish
 }
 
